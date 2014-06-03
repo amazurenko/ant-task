@@ -1,0 +1,66 @@
+<project name="MyProject" default="all">
+	
+	<property file="./config/project.properties"/>
+        <property name="build.dir" value="build"/>
+        <property name="testout.dir" value="${build.dir}/testout"/>
+        <property name="src.dir" value="./src/com/test"/>
+	<property name="src.tests.dir" value="./test/com/test"/>
+	<property name="class.dir" value="${build.dir}/class"/>
+	<property name="mypro.jar" value="${build.dir}/mypro.jar"/>
+	
+	<path id="junit.class.path">
+		<pathelement location="./lib/junit-4.11.jar" />
+		<pathelement location="./lib/hamcrest-core-1.3.jar" />
+		<pathelement location="./lib/commons-collections-3.2.1.jar" />
+                <pathelement location="${class.dir}" />
+		<pathelement location="${build.dir}" />
+	</path>
+
+        <target name="make.dir" description="Make a dir">
+		<mkdir dir="${build.dir}"/>
+		<mkdir dir="${class.dir}"/>
+		<mkdir dir="${testout.dir}"/>
+	</target>
+	
+	<target name="compile" description="Compiling java..." depends="make.dir">
+		<javac  srcdir="src" destdir="${class.dir}" includeantruntime="false">
+			<classpath refid="junit.class.path" />
+		</javac>
+
+	</target>	
+
+        <target name="test" description="Test using Junit..." depends="compile">
+               <junit  printsummary="yes" haltonfailure="yes" fork="true"  showoutput="true">
+                       
+			<classpath refid="junit.class.path" />
+       
+			<formatter type="xml"/>
+            		<batchtest todir="${testout.dir}">
+                    		<fileset dir="src">
+                            		<include name="**/*Test*.java"/>
+                    		</fileset>
+            		</batchtest>
+                </junit>
+        </target>
+
+
+        <target name="Myproject.jar" description="make jar file" depends="test">
+                 <jar destfile="${mypro.jar}">
+                        <fileset dir="${class.dir}">
+                                <include name="**/*.class"/>
+                                <exclude name="**/CVS"/>
+                         </fileset>
+                 </jar>
+        </target>
+
+	<target name="all" description="Do the entire build" depends="Myproject.jar">
+	 	<echo> I'm building first software . Month : ${month}</echo>
+	</target>
+
+
+	<target name="clean" description="Clean up" >
+		<echo> Cleanning up </echo>
+		<delete dir="build"/>
+	</target>
+
+</project>
