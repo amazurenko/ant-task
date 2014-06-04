@@ -15,6 +15,12 @@
                 <pathelement location="${class.dir}" />
 		<pathelement location="${build.dir}" />
 	</path>
+	
+	<patternset id="lib.patterns">
+		<include name="**/lib/junit-4.11.jar"/>
+		<include name="**/lib/hamcrest-core-1.3.jar"/>
+		<include name="**/lib/commons-collections-3.2.1.jar"/>
+	</patternset> 
 
         <target name="make.dir" description="Make a dir">
 		<mkdir dir="${build.dir}"/>
@@ -62,5 +68,19 @@
 		<echo> Cleanning up </echo>
 		<delete dir="build"/>
 	</target>
+
+        <target name="copying"   description="Copying all files to artifact build">
+                 
+
+	</target>
+
+	<target name="dist"   description="Create WAR file for binary distribution" depends="copying">
+ 		<tstamp>
+      			<format property="touch.time" pattern="MM-dd-yyyy_hh.mm"  unit="hour"/>
+  		</tstamp>
+		
+		<echo> Timestamp : ${touch.time}</echo>
+ 		<jar jarfile="${touch.time}.war"	basedir="${build.dir}"/>
+  	</target>
 
 </project>
